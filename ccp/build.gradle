@@ -1,31 +1,5 @@
 apply plugin: 'com.android.library'
 
-ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'ccp'
-
-    publishedGroupId = 'com.hbb20'
-    libraryName = 'CountryCodePicker'
-    artifact = 'ccp'
-
-    libraryDescription = 'Country Code Picker (CCP) is an android library which provides an easy way to search and select international country code for the phone number.'
-
-    siteUrl = 'https://github.com/hbb20/CountryCodePickerProject'
-    gitUrl = 'https://github.com/hbb20/CountryCodePickerProject.git'
-
-    libraryVersion = '2.2.0'
-
-    developerId = 'hbb20'
-    developerName = 'Harsh Bhakta'
-    developerEmail = 'harshbbhakta@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
-}
-
-
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -56,9 +30,6 @@ dependencies {
     })
     implementation 'io.michaelrocks:libphonenumber-android:8.9.0'
 }
-
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 
 /**
  * While uploading,

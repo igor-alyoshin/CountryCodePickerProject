@@ -9,6 +9,9 @@ import android.text.TextWatcher;
 
 import io.michaelrocks.libphonenumber.android.AsYouTypeFormatter;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
+import io.michaelrocks.libphonenumber.android.Phonenumber;
+
+import static io.michaelrocks.libphonenumber.android.PhoneNumberUtil.PhoneNumberType.MOBILE;
 
 
 //Reference https://stackoverflow.com/questions/32661363/using-phonenumberformattingtextwatcher-without-typing-country-calling-code to solve formatting issue
@@ -28,6 +31,7 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
     private String countryNameCode;
     Editable lastFormatted = null;
     private int countryPhoneCode;
+    private int countryPhoneNumberSize;
 
     //when country is changed, we update the number.
     //at this point this will avoid "stopFormatting"
@@ -57,6 +61,12 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
             String onlyDigits = phoneNumberUtil.normalizeDigitsOnly(lastFormatted);
             lastFormatted.replace(0, lastFormatted.length(), onlyDigits, 0, onlyDigits.length());
             needUpdateForCountryChange = false;
+        }
+        Phonenumber.PhoneNumber number = phoneNumberUtil.getExampleNumberForType(countryNameCode, MOBILE);
+        if (number != null) {
+            this.countryPhoneNumberSize = String.valueOf(number.getNationalNumber()).length();
+        } else {
+            this.countryPhoneNumberSize = 0;
         }
     }
 
@@ -100,11 +110,18 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
         boolean isCursorAtEnd = (selectionEnd == s.length());
 
         //get formatted text for this number
-        String formatted = reformat(s);
+        StringBuilder formatted = new StringBuilder(reformat(s));
 
-        //now calculate cursor position in formatted text
+        boolean isLimitReached = !hasDelimiters(formatted) && formatted.length() > countryPhoneNumberSize;
+
+        if (isLimitReached) {
+            formatted.delete(countryPhoneNumberSize, formatted.length());
+            formatted.replace(0, formatted.length(), reformat(formatted));
+        }
+
         int finalCursorPosition = 0;
-        if (formatted.equals(s.toString())) {
+        //now calculate cursor position in formatted text
+        if (TextUtils.equals(formatted, s.toString())) {
             //means there is no change while formatting don't move cursor
             finalCursorPosition = selectionEnd;
         } else if (isCursorAtEnd) {
@@ -133,9 +150,12 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
                 if (PhoneNumberUtils.isNonSeparator(formatted.charAt(i))) {
                     digitPassed++;
                 }
+                if (digitPassed == digitsBeforeCursor) {
+                    finalCursorPosition = i + 1;
+                    break;
+                }
             }
         }
-
         //if this ends right before separator, we might wish to move it further so user do not delete separator by mistake.
         // because deletion of separator will cause stop formatting that should not happen by mistake
         if (!isCursorAtEnd) {
@@ -145,14 +165,17 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
         }
 
         //Now we have everything calculated, set this values in
-        if (formatted != null) {
-            mSelfChange = true;
-            s.replace(0, s.length(), formatted, 0, formatted.length());
-            mSelfChange = false;
-            lastFormatted = s;
-            Selection.setSelection(s, finalCursorPosition);
-        }
+        mSelfChange = true;
+        s.replace(0, s.length(), formatted, 0, formatted.length());
+        mSelfChange = false;
+        lastFormatted = s;
+        Selection.setSelection(s, finalCursorPosition);
 
+    }
+
+    private boolean hasDelimiters(CharSequence charSequence) {
+        String s = charSequence.toString();
+        return s.contains(" ") || s.contains("-") || s.contains("(") || s.contains(")");
     }
 
     /**
