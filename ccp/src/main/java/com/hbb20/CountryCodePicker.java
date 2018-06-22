@@ -745,7 +745,7 @@ public class CountryCodePicker extends RelativeLayout {
                     } else {
                         formattedNumber = PhoneNumberUtils.formatNumber(getSelectedCountryCodeWithPlus() + formattedNumber + formattedNumber);
                     }
-                formattedNumber = formattedNumber.substring(getSelectedCountryCodeWithPlus().length()).trim();
+                formattedNumber = formattedNumber.substring(getSelectedCountryCodeWithPlus().length()).trim().replaceAll("[1-9]", "0");
                 Log.d(TAG, "updateHint: after format " + formattedNumber + " " + selectionMemoryTag);
             } else {
                 Log.w(TAG, "updateHint: No example number found for this country (" + getSelectedCountryNameCode() + ") or this type (" + hintExampleNumberType.name() + ").");
