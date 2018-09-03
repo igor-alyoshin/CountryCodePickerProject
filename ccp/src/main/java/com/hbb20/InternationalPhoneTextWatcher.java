@@ -112,6 +112,19 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
         //get formatted text for this number
         StringBuilder formatted = new StringBuilder(reformat(s));
 
+        try {
+            String nationalPhone = PhoneNumberUtil.normalizeDigitsOnly(formatted.toString());
+            Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(nationalPhone, countryNameCode);
+            String number = "" + phoneNumber.getNationalNumber();
+            String editTextNumber = normalizeDigits(s, true).toString();
+            boolean needToReformat = !TextUtils.equals(number, editTextNumber);
+            if (needToReformat) {
+                formatted.delete(0, formatted.length());
+                formatted.append(reformat(number));
+            }
+        } catch (Exception ignored) {
+        }
+
         boolean isLimitReached = !hasDelimiters(formatted) && formatted.length() > countryPhoneNumberSize;
 
         if (isLimitReached) {
@@ -231,5 +244,19 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
             }
         }
         return false;
+    }
+
+    private StringBuilder normalizeDigits(CharSequence number, boolean keepNonDigits) {
+        StringBuilder normalizedDigits = new StringBuilder(number.length());
+        for (int i = 0; i < number.length(); i++) {
+            char c = number.charAt(i);
+            int digit = Character.digit(c, 10);
+            if (digit != -1) {
+                normalizedDigits.append(digit);
+            } else if (keepNonDigits) {
+                normalizedDigits.append(c);
+            }
+        }
+        return normalizedDigits;
     }
 }
