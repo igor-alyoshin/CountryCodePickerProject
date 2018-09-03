@@ -95,6 +95,23 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
 
     @Override
     public synchronized void afterTextChanged(Editable s) {
+        //get formatted text for this number
+        StringBuilder formatted = new StringBuilder(reformat(s));
+
+        try {
+            String nationalPhone = PhoneNumberUtil.normalizeDigitsOnly(formatted.toString());
+            Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(nationalPhone, countryNameCode);
+            String number = "" + phoneNumber.getNationalNumber();
+            String editTextNumber = normalizeDigits(s, true).toString();
+            boolean needToReformat = !TextUtils.equals(number, editTextNumber);
+            if (needToReformat) {
+                mStopFormatting = false;
+                formatted.delete(0, formatted.length());
+                formatted.append(reformat(number));
+            }
+        } catch (Exception ignored) {
+        }
+
         if (mStopFormatting) {
             // Restart the formatting when all texts were clear.
             mStopFormatting = !(s.length() == 0);
@@ -108,22 +125,6 @@ public class InternationalPhoneTextWatcher implements TextWatcher {
         //calculate few things that will be helpful later
         int selectionEnd = Selection.getSelectionEnd(s);
         boolean isCursorAtEnd = (selectionEnd == s.length());
-
-        //get formatted text for this number
-        StringBuilder formatted = new StringBuilder(reformat(s));
-
-        try {
-            String nationalPhone = PhoneNumberUtil.normalizeDigitsOnly(formatted.toString());
-            Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(nationalPhone, countryNameCode);
-            String number = "" + phoneNumber.getNationalNumber();
-            String editTextNumber = normalizeDigits(s, true).toString();
-            boolean needToReformat = !TextUtils.equals(number, editTextNumber);
-            if (needToReformat) {
-                formatted.delete(0, formatted.length());
-                formatted.append(reformat(number));
-            }
-        } catch (Exception ignored) {
-        }
 
         boolean isLimitReached = !hasDelimiters(formatted) && formatted.length() > countryPhoneNumberSize;
 
