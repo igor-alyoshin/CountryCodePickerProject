@@ -2,7 +2,6 @@ package com.hbb20;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

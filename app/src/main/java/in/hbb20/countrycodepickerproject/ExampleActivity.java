@@ -1,11 +1,12 @@
 package in.hbb20.countrycodepickerproject;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class ExampleActivity extends AppCompatActivity {
 
@@ -44,7 +45,7 @@ public class ExampleActivity extends AppCompatActivity {
         viewPager=(ViewPager)findViewById(R.id.viewPager);
     }
 
-    class PagerAdapter extends FragmentPagerAdapter{
+    class PagerAdapter extends FragmentPagerAdapter {
 
         public PagerAdapter(FragmentManager fm) {
             super(fm);

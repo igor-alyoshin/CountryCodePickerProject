@@ -3,7 +3,6 @@ package in.hbb20.countrycodepickerproject;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hbb20.CountryCodePicker;
+
+import androidx.fragment.app.Fragment;
 
 
 /**

@@ -2,7 +2,6 @@ package in.hbb20.countrycodepickerproject;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.hbb20.CountryCodePicker;
+
+import androidx.fragment.app.Fragment;
 
 
 /**

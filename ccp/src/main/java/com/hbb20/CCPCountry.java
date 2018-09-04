@@ -1,7 +1,6 @@
 package com.hbb20;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -15,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
 
 
 /**
